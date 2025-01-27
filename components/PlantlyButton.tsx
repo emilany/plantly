@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   button: {
     paddingHorizontal: spacing.lg,

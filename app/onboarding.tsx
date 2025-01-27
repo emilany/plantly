@@ -25,7 +25,7 @@ export default function OnboardingScreen() {
       style={styles.container}
     >
       <StatusBar style="light" />
-      <View>
+      <View style={styles.textContainer}>
         <Text style={styles.heading}>Plantly</Text>
         <Text style={styles.tagline}>
           Keep your plants healthy and hydrated
@@ -43,6 +43,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: colors.white,
+  },
+  textContainer: {
+    paddingHorizontal: spacing.lg,
   },
   heading: {
     color: colors.white,
