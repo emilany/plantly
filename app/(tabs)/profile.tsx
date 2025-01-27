@@ -1,10 +1,21 @@
+import { useUserStore } from '@/store/userStore'
 import { colors } from '@/utils/theme'
-import { StyleSheet, Text, View } from 'react-native'
+import { useRouter } from 'expo-router'
+import { Button, StyleSheet, View } from 'react-native'
 
 export default function Profile() {
+  const router = useRouter()
+
+  const toggleHasOnboarded = useUserStore((state) => state.toggleHasOnboarded)
+
+  const handlePress = () => {
+    toggleHasOnboarded()
+    router.replace('/onboarding')
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>ProfileScreen</Text>
+      <Button title="Back to onboarding" onPress={handlePress} />
     </View>
   )
 }
@@ -15,8 +26,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.white,
-  },
-  text: {
-    fontSize: 24,
   },
 })
