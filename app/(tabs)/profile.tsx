@@ -1,7 +1,8 @@
+import { PlantlyButton } from '@/components/PlantlyButton'
 import { useUserStore } from '@/store/userStore'
 import { colors } from '@/utils/theme'
 import { useRouter } from 'expo-router'
-import { Button, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 export default function Profile() {
   const router = useRouter()
@@ -15,7 +16,7 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
-      <Button title="Back to onboarding" onPress={handlePress} />
+      <PlantlyButton title="Back to onboarding" onPress={handlePress} />
     </View>
   )
 }
