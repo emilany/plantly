@@ -1,8 +1,9 @@
 import { useUserStore } from '@/store/userStore'
-import { colors } from '@/utils/theme'
+import { colors, spacing } from '@/utils/theme'
 import Entypo from '@expo/vector-icons/Entypo'
 import Feather from '@expo/vector-icons/Feather'
-import { Redirect, Tabs } from 'expo-router'
+import { Link, Redirect, Tabs } from 'expo-router'
+import { Pressable } from 'react-native'
 
 const Layout = () => {
   const hasFinishedOnboarding = useUserStore(
@@ -20,6 +21,17 @@ const Layout = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => (
             <Entypo name="leaf" size={size} color={color} />
+          ),
+          headerRight: () => (
+            <Link href="/new" asChild>
+              <Pressable hitSlop={20} style={{ marginRight: spacing.md }}>
+                <Entypo
+                  name="circle-with-plus"
+                  size={24}
+                  color={colors.green}
+                />
+              </Pressable>
+            </Link>
           ),
         }}
       />
