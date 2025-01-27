@@ -1,5 +1,5 @@
+import { colors } from '@/utils/theme'
 import { StyleSheet, Text, View } from 'react-native'
-import { colors } from '../utils/theme'
 
 export default function Profile() {
   return (
