@@ -1,6 +1,7 @@
-import { PlantType } from '@/store/plantsStore'
+import { PlantType, usePlantsStore } from '@/store/plantsStore'
 import { colors, spacing } from '@/utils/theme'
-import { StyleSheet, Text, View } from 'react-native'
+import AntDesign from '@expo/vector-icons/AntDesign'
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import PlantlyImage from './PlantlyImage'
 
 type Props = {
@@ -8,6 +9,30 @@ type Props = {
 }
 
 export default function PlantCard({ plant }: Props) {
+  const removePlant = usePlantsStore((state) => state.removePlant)
+
+  const handleRemovePlant = () => {
+    removePlant(plant.id)
+  }
+
+  const confirmRemovePlant = () => {
+    Alert.alert(
+      'Remove Plant',
+      `Are you sure you want to remove ${plant.name}?`,
+      [
+        {
+          text: 'Yes',
+          onPress: handleRemovePlant,
+          style: 'destructive',
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ]
+    )
+  }
+
   return (
     <View style={styles.container}>
       <PlantlyImage size={100} imageUri={plant.imageUri} />
@@ -21,6 +46,15 @@ export default function PlantCard({ plant }: Props) {
           {plant.wateringFrequencyDays === 1 ? 'day' : 'days'}
         </Text>
       </View>
+
+      <TouchableOpacity
+        onPress={confirmRemovePlant}
+        activeOpacity={0.8}
+        style={styles.deleteButton}
+        hitSlop={10}
+      >
+        <AntDesign name="closecircle" size={18} color={colors.grey} />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -54,5 +88,10 @@ const styles = StyleSheet.create({
   },
   description: {
     color: colors.grey,
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: spacing.xs,
+    right: spacing.xs,
   },
 })
