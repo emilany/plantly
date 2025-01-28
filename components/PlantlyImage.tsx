@@ -1,10 +1,14 @@
 import { Image } from 'expo-image'
 import { useWindowDimensions } from 'react-native'
 
-export default function PlantlyImage() {
+type Props = {
+  size?: number
+}
+
+export default function PlantlyImage({ size }: Props) {
   const { width } = useWindowDimensions()
 
-  const imageSize = Math.min(width / 1.5, 400)
+  const imageSize = size ?? Math.min(width / 1.5, 400)
 
   return (
     <Image

@@ -1,14 +1,20 @@
 import { PlantlyButton } from '@/components/PlantlyButton'
 import PlantlyImage from '@/components/PlantlyImage'
+import { usePlantsStore } from '@/store/plantsStore'
 import { colors, spacing } from '@/utils/theme'
+import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function NewScreen() {
+  const router = useRouter()
+
   const [name, setName] = useState<string>()
   const [days, setDays] = useState<string>()
   const [error, setError] = useState<string | undefined>(undefined)
+
+  const addPlant = usePlantsStore((state) => state.addPlant)
 
   const handlePress = () => {
     if (!name) {
@@ -21,8 +27,8 @@ export default function NewScreen() {
       return
     }
 
-    setError(undefined)
-    console.log('Plant added')
+    addPlant(name, Number(days))
+    router.navigate('/')
   }
 
   const handleSetName = (value: string) => {
