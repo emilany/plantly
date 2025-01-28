@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as FileSystem from 'expo-file-system'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
@@ -7,11 +8,18 @@ export type PlantType = {
   name: string
   wateringFrequencyDays: number
   lastWateredAtTimestamp?: number
+  imageUri?: string
+}
+
+type AddPlantProps = {
+  name: string
+  wateringFrequencyDays: number
+  imageUri?: string
 }
 
 type PlantsStore = {
   plants: PlantType[]
-  addPlant: (name: string, wateringFrequencyDays: number) => void
+  addPlant: (plant: AddPlantProps) => void
   removePlant: (id: string) => void
   waterPlant: (id: string) => void
 }
@@ -20,16 +28,34 @@ export const usePlantsStore = create(
   persist<PlantsStore>(
     (set) => ({
       plants: [],
-      addPlant: (name: string, wateringFrequencyDays: number) => {
+      addPlant: async ({
+        name,
+        wateringFrequencyDays,
+        imageUri,
+      }: AddPlantProps) => {
+        const savedImageUri = imageUri
+          ? FileSystem.documentDirectory +
+            `${new Date().getTime()}-${imageUri.split('/').slice(-1)[0]}`
+          : undefined
+
+        if (imageUri && savedImageUri) {
+          await FileSystem.copyAsync({
+            from: imageUri,
+            to: savedImageUri,
+          })
+        }
+
+        const newPlant: PlantType = {
+          id: new Date().toTimeString(),
+          name,
+          wateringFrequencyDays,
+          imageUri: savedImageUri,
+        }
+
         set((state) => {
-          const plant: PlantType = {
-            id: new Date().toTimeString(),
-            name,
-            wateringFrequencyDays,
-          }
           return {
             ...state,
-            plants: [plant, ...state.plants],
+            plants: [newPlant, ...state.plants],
           }
         })
       },

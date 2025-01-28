@@ -37,7 +37,7 @@ export default function NewScreen() {
       return
     }
 
-    addPlant(name, Number(days))
+    addPlant({ name, wateringFrequencyDays: Number(days), imageUri })
     router.navigate('/')
   }
 

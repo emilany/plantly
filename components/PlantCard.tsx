@@ -10,9 +10,12 @@ type Props = {
 export default function PlantCard({ plant }: Props) {
   return (
     <View style={styles.container}>
-      <PlantlyImage size={100} />
-      <View>
-        <Text style={styles.heading}>{plant.name}</Text>
+      <PlantlyImage size={100} imageUri={plant.imageUri} />
+
+      <View style={styles.textContainer}>
+        <Text style={styles.heading} numberOfLines={2}>
+          {plant.name}
+        </Text>
         <Text style={styles.description}>
           Water every {plant.wateringFrequencyDays}{' '}
           {plant.wateringFrequencyDays === 1 ? 'day' : 'days'}
@@ -39,6 +42,10 @@ const styles = StyleSheet.create({
     elevation: 3,
     padding: spacing.sm,
     marginBottom: spacing.sm,
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: spacing.md,
   },
   heading: {
     fontSize: 18,
