@@ -2,9 +2,18 @@ import { PlantlyButton } from '@/components/PlantlyButton'
 import PlantlyImage from '@/components/PlantlyImage'
 import { usePlantsStore } from '@/store/plantsStore'
 import { colors, spacing } from '@/utils/theme'
+import AntDesign from '@expo/vector-icons/AntDesign'
+import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function NewScreen() {
@@ -13,6 +22,7 @@ export default function NewScreen() {
   const [name, setName] = useState<string>()
   const [days, setDays] = useState<string>()
   const [error, setError] = useState<string | undefined>(undefined)
+  const [imageUri, setImageUri] = useState<string>()
 
   const addPlant = usePlantsStore((state) => state.addPlant)
 
@@ -41,6 +51,21 @@ export default function NewScreen() {
     setError(undefined)
   }
 
+  const handleChooseImage = async () => {
+    if (Platform.OS === 'web') return
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'images',
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    })
+
+    if (!result.canceled) setImageUri(result.assets[0].uri)
+  }
+
+  const handleRemoveImage = () => setImageUri(undefined)
+
   return (
     <KeyboardAwareScrollView
       style={styles.container}
@@ -48,7 +73,19 @@ export default function NewScreen() {
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.imageContainer}>
-        <PlantlyImage />
+        {imageUri && (
+          <TouchableOpacity
+            onPress={handleRemoveImage}
+            activeOpacity={0.8}
+            style={styles.deleteButton}
+          >
+            <AntDesign name="closecircle" size={24} color={colors.grey} />
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity onPress={handleChooseImage} activeOpacity={0.8}>
+          <PlantlyImage imageUri={imageUri} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.formRow}>
@@ -93,7 +130,9 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   imageContainer: {
+    position: 'relative',
     alignItems: 'center',
+    marginBottom: spacing.md,
   },
   formRow: {
     marginBottom: spacing.md,
@@ -112,5 +151,10 @@ const styles = StyleSheet.create({
     color: colors.red,
     marginTop: spacing.sm,
     textAlign: 'center',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
 })
